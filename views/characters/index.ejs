@@ -1,0 +1,10 @@
+<h2>Search Character</h2>
+<form action="/characters" method="get">
+    <label>Name</label>
+    <input type="text" name="name" value="<%= searchOptions.name %>">
+    <button type="submit">Search</button>
+</form>
+<br>
+<% characters.forEach(character => { %>
+    <div><%= character.name %></div>
+<% }) %>
