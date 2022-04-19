@@ -1,18 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
 const Anime = require('../models/anime')
-const uploadPath = path.join('public', Anime.coverImageBasePath)
 const Character = require('../models/character')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
-const upload = multer({
-    dest: uploadPath,
-    fileFilter: (req, file, callback) => {
-        callback(null, imageMimeTypes.includes(file.mimetype))
-    }
-})
 
 
 // All Anime's Route
@@ -44,8 +34,7 @@ router.get('/new', async (req, res) => {
 })
 
 // Create Anime Route
-router.post('/', upload.single('cover'), async (req, res) => {
-    const fileName = req.file != null ? req.file.filename : null
+router.post('/', async (req, res) => {
     const anime = new Anime({
         title: req.body.title,
         episodesCount: req.body.episodesCount,
@@ -54,28 +43,19 @@ router.post('/', upload.single('cover'), async (req, res) => {
         createdAt: new Date(req.body.createdAt),
         source: req.body.source,
         externalLink: req.body.externalLink,
-        coverImageName: fileName,
         character: req.body.character,
         description: req.body.description
     })
+    saveCover(anime, req.body.cover)
 
     try {
         const newAnime = await anime.save()
         // res.redirect(`anime/${newAnime.id}`)
         res.redirect(`anime`)
     } catch {
-        if (anime.coverImageName != null) {
-            removeAnimeCover(anime.coverImageName)
-        }
         renderNewPage(res, anime, true)
     }
 })
-
-function removeAnimeCover(fileName) {
-    fs.unlink(path.join(uploadPath, fileName), (err) => {
-        if (err) console.error(err)
-    })
-}
 
 async function renderNewPage(res, anime, hasError = false) {
     try {
@@ -88,6 +68,15 @@ async function renderNewPage(res, anime, hasError = false) {
         res.render('animes/new', params)
     } catch {
         res.redirect('/anime')
+    }
+}
+
+function saveCover(anime, coverEncoded) {
+    if (coverEncoded == null) return
+    const cover = JSON.parse(coverEncoded)
+    if (cover != null && imageMimeTypes.includes(cover.type)) {
+        anime.coverImage = new Buffer.from(cover.data, 'base64')
+        anime.coverImageType = cover.type
     }
 }
 
