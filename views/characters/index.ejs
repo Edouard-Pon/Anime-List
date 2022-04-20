@@ -7,4 +7,7 @@
 <br>
 <% characters.forEach(character => { %>
     <div><%= character.name %></div>
+    <a href="/characters/<%= character.id %>">View</a>
+    <a href="/characters/<%= character.id %>/edit">Edit</a>
+    <%- include('../partials/deleteForm',  { url: `/characters/${character.id}` }) %>
 <% }) %>

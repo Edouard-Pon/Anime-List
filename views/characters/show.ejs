@@ -1,0 +1,9 @@
+<h2><%= character.name %></h2>
+<a href="/characters/<%= character.id %>/edit">Edit</a>
+<%- include('../partials/deleteForm', { url: `/characters/${character.id}` }) %>
+<% if (animesByCharacter.length > 0) { %>
+    <h2>Anime With Character</h2>
+    <% animesByCharacter.forEach(anime => { %>
+        <img height="150" width="100" src="<%= anime.coverImagePath %>">
+    <% }) %>
+<% } %>
