@@ -1,6 +1,8 @@
 <h2>Recently Added</h2>
 <div>
     <% animes.forEach(anime => { %>
-        <img height="150" width="100" src="<%= anime.coverImagePath %>">
+        <a href="/anime/<%= anime.id %>">
+            <img height="150" width="100" src="<%= anime.coverImagePath %>">
+        </a>
     <% }) %>
 </div>

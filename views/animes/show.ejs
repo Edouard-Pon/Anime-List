@@ -1,0 +1,13 @@
+<h2><%= anime.title %></h2>
+<img width="100" height="150" src="<%= anime.coverImagePath %>">
+<div>Episodes: <%= anime.episodesCount %></div>
+<div>Status: <%= anime.status %></div>
+<div>Source: <%= anime.source %></div>
+<div>Link: <%= anime.externalLink %></div>
+<div>Publish Date: <%= anime.publishDate.toDateString() %></div>
+<div>Character: <%= anime.character.name %></div>
+<div>Description: <%= anime.description %></div>
+
+<a href="/anime/<%= anime.id %>/edit">Edit</a>
+<%- include('../partials/deleteForm', { url: `/anime/${anime.id}` }) %>
+<a href="/characters/<%= anime.character.id %>">View Character</a>

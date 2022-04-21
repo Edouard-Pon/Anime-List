@@ -50,22 +50,102 @@ router.post('/', async (req, res) => {
 
     try {
         const newAnime = await anime.save()
-        // res.redirect(`anime/${newAnime.id}`)
-        res.redirect(`anime`)
+        res.redirect(`anime/${newAnime.id}`)
     } catch {
         renderNewPage(res, anime, true)
     }
 })
 
+// Show Anime Route
+router.get('/:id', async (req, res) => {
+    try {
+        const anime = await Anime.findById(req.params.id).populate('character').exec()
+        res.render('animes/show', { anime: anime })
+    } catch {
+        res.redirect('/')
+    }
+})
+
+// Edit Anime Route
+router.get('/:id/edit', async (req, res) => {
+    try {
+        const anime = await Anime.findById(req.params.id)
+        renderEditPage(res, anime)
+    } catch {
+        res.redirect('/')
+    }
+})
+
+// Update Anime Route
+router.put('/:id', async (req, res) => {
+    let anime
+
+    try {
+        anime = await Anime.findById(req.params.id)
+        anime.title = req.body.title
+        anime.episodesCount = req.body.episodesCount
+        anime.status = req.body.status
+        anime.publishDate = new Date(req.body.publishDate)
+        anime.createdAt = new Date(req.body.createdAt)
+        anime.externalLink = req.body.externalLink
+        anime.character = req.body.character
+        anime.description = req.body.description
+        if (req.body.cover != null && req.body.cover !== '') {
+            saveCover(anime, req.body.cover)
+        }
+        await anime.save()
+        res.redirect(`/anime/${anime.id}`)
+    } catch {
+        if (anime != null) {
+            renderEditPage(res, anime, true)
+        } else {
+            res.redirect('/')
+        }
+    }
+})
+
+// Delete Anime Page
+router.delete('/:id', async (req, res) => {
+    let anime
+    try {
+        anime = await Anime.findById(req.params.id)
+        await anime.remove()
+        res.redirect('/anime')
+    } catch {
+        if (anime != null) {
+            res.render('animes/show', {
+                anime: anime,
+                errorMessage: 'Could not remove Anime'
+            })
+        } else {
+            res.redirect('/')
+        }
+    }
+})
+
 async function renderNewPage(res, anime, hasError = false) {
+    renderFormPage(res, anime, 'new', hasError)
+}
+
+async function renderEditPage(res, anime, hasError = false) {
+    renderFormPage(res, anime, 'edit', hasError)
+}
+
+async function renderFormPage(res, anime, form, hasError = false) {
     try {
         const characters = await Character.find({})
         const params = {
             characters: characters,
             anime: anime
         }
-        if (hasError) params.errorMessage = 'Error Creating'
-        res.render('animes/new', params)
+        if (hasError) {
+            if (form === 'edit') {
+                params.errorMessage = 'Error Updating Anime'
+            } else {
+                params.errorMessage = 'Error Creating Anime'
+            }
+        }
+        res.render(`animes/${form}`, params)
     } catch {
         res.redirect('/anime')
     }
