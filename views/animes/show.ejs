@@ -3,7 +3,7 @@
 <div>Episodes: <%= anime.episodesCount %></div>
 <div>Status: <%= anime.status %></div>
 <div>Source: <%= anime.source %></div>
-<div>Link: <%= anime.externalLink %></div>
+<div>Link: <a href="<%= anime.externalLink %>" target="_blank">Link</a></div>
 <div>Publish Date: <%= anime.publishDate.toDateString() %></div>
 <div>Character: <%= anime.character.name %></div>
 <div>Description: <%= anime.description %></div>
