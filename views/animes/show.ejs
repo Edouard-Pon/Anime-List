@@ -3,11 +3,11 @@
 <div>Episodes: <%= anime.episodesCount %></div>
 <div>Status: <%= anime.status %></div>
 <div>Source: <%= anime.source %></div>
-<div>Link: <a href="<%= anime.externalLink %>" target="_blank">Link</a></div>
+<% if (anime.externalLink != null && anime.externalLink !== '') { %>
+    <div>Link: <a href="<%= anime.externalLink %>" target="_blank">Link</a></div>
+<% } %>
 <div>Publish Date: <%= anime.publishDate.toDateString() %></div>
-<div>Character: <%= anime.character.name %></div>
 <div>Description: <%= anime.description %></div>
 
 <a href="/anime/<%= anime.id %>/edit">Edit</a>
 <%- include('../partials/deleteForm', { url: `/anime/${anime.id}` }) %>
-<a href="/characters/<%= anime.character.id %>">View Character</a>

@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const Anime = require('../models/anime')
-const Character = require('../models/character')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
 
 
@@ -43,7 +42,6 @@ router.post('/', async (req, res) => {
         createdAt: new Date(req.body.createdAt),
         source: req.body.source,
         externalLink: req.body.externalLink,
-        character: req.body.character,
         description: req.body.description
     })
     saveCover(anime, req.body.cover)
@@ -59,7 +57,7 @@ router.post('/', async (req, res) => {
 // Show Anime Route
 router.get('/:id', async (req, res) => {
     try {
-        const anime = await Anime.findById(req.params.id).populate('character').exec()
+        const anime = await Anime.findById(req.params.id).exec()
         res.render('animes/show', { anime: anime })
     } catch {
         res.redirect('/')
@@ -88,7 +86,6 @@ router.put('/:id', async (req, res) => {
         anime.publishDate = new Date(req.body.publishDate)
         anime.createdAt = new Date(req.body.createdAt)
         anime.externalLink = req.body.externalLink
-        anime.character = req.body.character
         anime.description = req.body.description
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(anime, req.body.cover)
@@ -133,9 +130,7 @@ async function renderEditPage(res, anime, hasError = false) {
 
 async function renderFormPage(res, anime, form, hasError = false) {
     try {
-        const characters = await Character.find({})
         const params = {
-            characters: characters,
             anime: anime
         }
         if (hasError) {

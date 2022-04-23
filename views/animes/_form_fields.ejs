@@ -33,19 +33,6 @@
     <input type="text" name="externalLink" value="<%= anime.externalLink %>">
 </div>
 <div>
-    <label>Character</label>
-    <select name="character">
-        <option></option>
-        <% characters.forEach(character => { %>
-            <% if (character.id === anime.character) { %>
-                <option selected label="<%= character.name %>" value="<%= character.id %>"></option>
-            <% } else { %>
-                <option label="<%= character.name %>" value="<%= character.id %>"></option>
-            <% } %>
-        <% }) %>
-    </select>
-</div>
-<div>
     <label>Cover</label>
     <input type="file" name="cover" class="filepond">
 </div>
