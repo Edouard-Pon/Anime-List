@@ -25,8 +25,7 @@ const animeSchema = new mongoose.Schema({
         required: true,
     },
     source: {
-        type: String,
-        required: true
+        type: String
     },
     externalLink: {
         type: String

@@ -2,7 +2,9 @@
 <img width="100" height="150" src="<%= anime.coverImagePath %>">
 <div>Episodes: <%= anime.episodesCount %></div>
 <div>Status: <%= anime.status %></div>
-<div>Source: <%= anime.source %></div>
+<% if (anime.source != null && anime.source !== '') { %>
+    <div>Source: <%= anime.source %></div>
+<% } %>
 <% if (anime.externalLink != null && anime.externalLink !== '') { %>
     <div>Link: <a href="<%= anime.externalLink %>" target="_blank">Link</a></div>
 <% } %>
