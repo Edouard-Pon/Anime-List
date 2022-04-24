@@ -5,7 +5,7 @@ const Anime = require('../models/anime')
 router.get('/', async (req, res) => {
     let animes
     try {
-        animes = await Anime.find().sort({ createdAt: 'desc' }).limit(10).exec()
+        animes = await Anime.find().sort({ createdAt: 'desc' }).exec()
     } catch {
         animes = []
     }

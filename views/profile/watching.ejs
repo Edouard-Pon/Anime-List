@@ -1,0 +1,14 @@
+<%- include('index') %>
+<h2>Watching <%= animes.length %></h2>
+<div>
+    <table>
+        <thead>
+            <%- include('_anime_table_thead') %>
+        </thead>
+        <tbody>
+            <% animes.forEach(anime => { %>
+                <%- include('_anime_table_tbody', { anime: anime }) %>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
