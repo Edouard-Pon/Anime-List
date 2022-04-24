@@ -42,7 +42,8 @@ router.post('/', async (req, res) => {
         createdAt: new Date(req.body.createdAt),
         source: req.body.source,
         externalLink: req.body.externalLink,
-        description: req.body.description
+        description: req.body.description,
+        viewStatus: req.body.viewStatus
     })
     saveCover(anime, req.body.cover)
 
@@ -87,6 +88,7 @@ router.put('/:id', async (req, res) => {
         anime.createdAt = new Date(req.body.createdAt)
         anime.externalLink = req.body.externalLink
         anime.description = req.body.description
+        anime.viewStatus = req.body.viewStatus
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(anime, req.body.cover)
         }

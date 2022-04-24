@@ -9,5 +9,7 @@
 <div>Publish Date: <%= anime.publishDate.toDateString() %></div>
 <div>Description: <%= anime.description %></div>
 
+<div>View Status: <%= anime.viewStatus %></div>
+
 <a href="/anime/<%= anime.id %>/edit">Edit</a>
 <%- include('../partials/deleteForm', { url: `/anime/${anime.id}` }) %>

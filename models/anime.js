@@ -39,10 +39,9 @@ const animeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    character: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Character'
-    },
+    viewStatus: {
+        type: String,
+    }
 })
 
 animeSchema.virtual('coverImagePath').get(function () {
