@@ -1,9 +1,14 @@
-<h2><%= character.name %></h2>
+<h2><%= character.name %> <%= character.surname %></h2>
+<div><img width="100" height="150" src="<%= character.imagePath %>"></div>
+<div>Name: <%= character.name %></div>
+<div>Surname: <%= character.surname %></div>
+<div>Age: <%= character.age %></div>
+<div>Description: <%= character.description %></div>
 <a href="/characters/<%= character.id %>/edit">Edit</a>
 <%- include('../partials/deleteForm', { url: `/characters/${character.id}` }) %>
-<% if (animesByCharacter.length > 0) { %>
+<% if (animes.length > 0) { %>
     <h2>Anime With Character</h2>
-    <% animesByCharacter.forEach(anime => { %>
+    <% animes.forEach(anime => { %>
         <a href="/anime/<%= anime.id %>">
             <img height="150" width="100" src="<%= anime.coverImagePath %>">
         </a>

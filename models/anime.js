@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Character = require('./character')
 
 const animeSchema = new mongoose.Schema({
     title: {
@@ -41,6 +42,18 @@ const animeSchema = new mongoose.Schema({
     viewStatus: {
         type: String,
     }
+})
+
+animeSchema.pre('remove', function (next) {
+    Character.find({ anime: this.id }, (err, characters) => {
+        if (err) {
+            next(err)
+        } else if (characters.length > 0) {
+            next(new Error('This anime is pinned to characters'))
+        } else {
+            next()
+        }
+    })
 })
 
 animeSchema.virtual('coverImagePath').get(function () {

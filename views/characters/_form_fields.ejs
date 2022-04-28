@@ -1,2 +1,33 @@
-<label>Name</label>
-<input type="text" name="name" value="<%= character.name %>">
+<div>
+    <label>Name</label>
+    <input type="text" name="name" value="<%= character.name %>">
+</div>
+<div>
+    <label>Surname</label>
+    <input type="text" name="surname" value="<%= character.surname %>">
+</div>
+<div>
+    <label>Age</label>
+    <input type="text" name="age" value="<%= character.age %>">
+</div>
+<div>
+    <label>Anime</label>
+    <select name="anime">
+        <option></option>
+        <% animes.forEach(anime => { %>
+            <% if (anime.id === character.anime) { %>
+                <option selected label="<%= anime.title %>" value="<%= anime.id %>"></option>
+            <% } else { %>
+                <option label="<%= anime.title %>" value="<%= anime.id %>"></option>
+            <% } %>
+        <% }) %>
+    </select>
+</div>
+<div>
+    <label>Image</label>
+    <input type="file" name="image" class="filepond">
+</div>
+<div>
+    <label>Description</label>
+    <textarea name="description"><%= character.description %></textarea>
+</div>
