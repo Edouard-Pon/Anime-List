@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
         query = query.gte('publishDate', req.query.publishedAfter)
     }
     try {
-        const animes = await query.exec()
+        const animes = await query.sort({ createdAt: 'desc' }).exec()
         res.render('animes/index', {
             animes: animes,
             searchOptions: req.query

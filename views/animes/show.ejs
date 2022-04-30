@@ -1,4 +1,4 @@
-<h2><%= anime.title %></h2>
+<h2 class="page-header"><%= anime.title %></h2>
 <img width="100" height="150" src="<%= anime.coverImagePath %>">
 <div>Episodes: <%= anime.episodesCount %></div>
 <div>Status: <%= anime.status %></div>
@@ -13,5 +13,7 @@
 
 <div>View Status: <%= anime.viewStatus %></div>
 
-<a href="/anime/<%= anime.id %>/edit">Edit</a>
-<%- include('../partials/deleteForm', { url: `/anime/${anime.id}` }) %>
+<div class="btn-row">
+    <a class="btn btn-primary" href="/anime/<%= anime.id %>/edit">Edit</a>
+    <%- include('../partials/deleteForm', { url: `/anime/${anime.id}` }) %>
+</div>
