@@ -3,6 +3,7 @@
 @import 'shared/header.css';
 @import 'shared/buttons.css';
 @import 'shared/page-header.css';
+@import 'shared/content-table.css';
 
 :root {
     font-family: 'Cormorant Garamond', serif;
@@ -21,10 +22,6 @@ body {
 .container {
     max-width: 1600px;
     margin: auto auto 3rem;
-}
-
-.header {
-
 }
 
 .inner-container {

@@ -1,0 +1,61 @@
+:root {
+    --table-head-font-size: 1rem;
+    --table-head-font-weight: bold;
+    --color-table-box-shadow: hsla(0, 0%, 0%, 0.25);
+    --color-table-head-background: hsl(334, 63%, 37%);
+    --color-table-body-background: hsl(334, 56%, 34%);
+    --color-table-body-background-dark: hsl(336, 51%, 29%);
+    --table-body-font-size: .9rem;
+
+}
+
+.content-table {
+    display: flex;
+    justify-content: center;
+}
+
+.content-table table {
+    border-radius: .25rem .25rem 0 0;
+    text-decoration: none;
+    border-collapse: collapse;
+    box-shadow: 0 0 1rem var(--color-table-box-shadow);
+    overflow: hidden;
+}
+
+.content-table thead {
+    font-size: var(--table-head-font-size);
+    font-weight: var(--table-head-font-weight);
+    text-align: center;
+    background-color: var(--color-table-head-background);
+}
+
+.content-table th, td {
+    padding: .6rem 1rem;
+}
+
+.content-table td {
+    border-right: .05rem solid white;
+    border-bottom: .05rem solid white;
+}
+
+.content-table td:last-of-type {
+    border-right: hidden;
+}
+
+.content-table tbody tr {
+    background-color: var(--color-table-body-background);
+}
+
+.content-table tbody tr:nth-of-type(even) {
+    background-color: var(--color-table-body-background-dark);
+}
+
+.content-table table a {
+    text-decoration: none;
+    color: var(--color-text-light);
+    font-size: var(--table-body-font-size);
+}
+
+.content-table .text-align-center {
+    text-align: center;
+}

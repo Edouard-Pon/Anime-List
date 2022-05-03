@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== 'production') {
+﻿if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
@@ -8,9 +8,9 @@ const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 
-const  indexRouter = require('./routes/index')
-const  characterRouter = require('./routes/characters')
-const  animeRouter = require('./routes/animes')
+const indexRouter = require('./routes/index')
+const characterRouter = require('./routes/characters')
+const animeRouter = require('./routes/animes')
 const profileRouter = require('./routes/profile')
 
 app.set('view engine', 'ejs')
