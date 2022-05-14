@@ -13,10 +13,12 @@
 <div>
     <label>Anime</label>
     <select name="anime">
-        <option></option>
+        <option disabled selected>Select The Anime</option>
         <% animes.forEach(anime => { %>
-            <% if (anime.id === character.anime) { %>
-                <option selected label="<%= anime.title %>" value="<%= anime.id %>"></option>
+            <% if (character.anime != null && character.anime !== '') { %>
+                <% if (anime.id === character.anime.toString()) { %>
+                    <option selected label="<%= anime.title %>" value="<%= anime.id %>"></option>
+                <% } %>
             <% } else { %>
                 <option label="<%= anime.title %>" value="<%= anime.id %>"></option>
             <% } %>
