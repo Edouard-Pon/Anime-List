@@ -49,6 +49,11 @@
     outline: none;
 }
 
+.form-item select {
+    width: 100%;
+    text-overflow: ellipsis;
+}
+
 .form-item textarea {
     height: 100%;
     resize: none;
