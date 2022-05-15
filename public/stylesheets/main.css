@@ -4,6 +4,7 @@
 @import 'shared/buttons.css';
 @import 'shared/page-header.css';
 @import 'shared/content-table.css';
+@import 'shared/form.css';
 
 :root {
     font-family: 'Cormorant Garamond', serif;

@@ -10,32 +10,33 @@
         </select>
     </div>
     <div class="form-item">
-        <label>Created At</label>
+        <label>Created At *</label>
         <input type="date" name="createdAt"
                value="<%= anime.createdAt == null ? '' : anime.createdAt.toISOString().split('T')[0] %>">
     </div>
 </div>
 <div class="form-row">
     <div class="form-item">
-        <label>Title</label>
+        <label>Title *</label>
         <input type="text" name="title" value="<%= anime.title %>">
     </div>
     <div class="form-item">
-        <label>Episodes</label>
+        <label>Episodes *</label>
         <input type="number" name="episodesCount" min="1" value="<%= anime.episodesCount %>">
     </div>
     <div class="form-item">
-        <label>Status</label>
+        <label>Status *</label>
         <select name="status">
-            <option label="Out" value="Out"></option>
-            <option label="Ongoing" value="Ongoing"></option>
-            <option label="Announced" value="Announced"></option>
+            <option disabled selected>Select Status</option>
+            <option <% if (anime.status === "Out") { %><%= "selected" %><% } %> label="Out" value="Out"></option>
+            <option <% if (anime.status === "Ongoing") { %><%= "selected" %><% } %> label="Ongoing" value="Ongoing"></option>
+            <option <% if (anime.status === "Announced") { %><%= "selected" %><% } %> label="Announced" value="Announced"></option>
         </select>
     </div>
 </div>
 <div class="form-row">
     <div class="form-item">
-        <label>Publish Date</label>
+        <label>Publish Date *</label>
         <input type="date" name="publishDate"
                value="<%= anime.publishDate == null ? '' : anime.publishDate.toISOString().split('T')[0] %>">
     </div>
@@ -50,7 +51,7 @@
 </div>
 <div class="form-row">
     <div class="form-item form-item-no-grow">
-        <label>Cover</label>
+        <label>Cover *</label>
         <input type="file" name="cover" class="filepond">
     </div>
     <div class="form-item">

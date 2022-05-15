@@ -1,6 +1,8 @@
 <h2 class="page-header">Edit Anime</h2>
 <form action="/anime/<%= anime.id %>?_method=PUT" method="post">
     <%- include('_form_fields') %>
-    <a href="/anime">Cancel</a>
-    <button type="submit">Update</button>
+    <div class="form-row form-row-end btn-row">
+        <a class="btn btn-danger" href="/anime">Cancel</a>
+        <button class="btn btn-primary" type="submit">Update</button>
+    </div>
 </form>
