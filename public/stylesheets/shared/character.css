@@ -1,0 +1,10 @@
+.character-row {
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.character-name a {
+    font-size: 1rem;
+    text-decoration: none;
+    color: var(--color-text-light);
+}

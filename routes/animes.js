@@ -45,9 +45,8 @@ router.post('/', async (req, res) => {
         description: req.body.description,
         viewStatus: req.body.viewStatus
     })
-    saveCover(anime, req.body.cover)
-
     try {
+        saveCover(anime, req.body.cover)
         const newAnime = await anime.save()
         res.redirect(`anime/${newAnime.id}`)
     } catch {

@@ -1,8 +1,2 @@
 <h2 class="page-header">Recently Added</h2>
-<div>
-    <% animes.forEach(anime => { %>
-        <a href="/anime/<%= anime.id %>">
-            <img height="150" width="100" src="<%= anime.coverImagePath %>">
-        </a>
-    <% }) %>
-</div>
+<%- include('partials/animeGrid', { animes: animes, large: true }) %>

@@ -21,6 +21,8 @@
                 <% if (character.anime != null && character.anime !== '') { %>
                     <% if (anime.id === character.anime.toString()) { %>
                         <option selected label="<%= anime.title %>" value="<%= anime.id %>"></option>
+                    <% } else { %>
+                        <option label="<%= anime.title %>" value="<%= anime.id %>"></option>
                     <% } %>
                 <% } else { %>
                     <option label="<%= anime.title %>" value="<%= anime.id %>"></option>
@@ -32,7 +34,7 @@
 <div class="form-row">
     <div class="form-item form-item-no-grow">
         <label>Image</label>
-        <input type="file" name="image" class="filepond">
+        <input type="file" name="image" class="anime-cover filepond">
     </div>
     <div class="form-item">
         <label>Description</label>

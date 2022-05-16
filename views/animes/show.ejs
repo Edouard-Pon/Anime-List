@@ -1,17 +1,31 @@
 <h2 class="page-header"><%= anime.title %></h2>
-<img width="100" height="150" src="<%= anime.coverImagePath %>">
-<div>Episodes: <%= anime.episodesCount %></div>
-<div>Status: <%= anime.status %></div>
-<% if (anime.source != null && anime.source !== '') { %>
-    <div>Source: <%= anime.source %></div>
-<% } %>
-<% if (anime.externalLink != null && anime.externalLink !== '') { %>
-    <div>Link: <a href="<%= anime.externalLink %>" target="_blank">Link</a></div>
-<% } %>
-<div>Publish Date: <%= anime.publishDate.toDateString() %></div>
-<div>Description: <%= anime.description %></div>
-<div>View Status: <%= anime.viewStatus %></div>
-<br>
+<div class="anime-details">
+    <div>
+        <img class="anime-cover anime-cover-large" src="<%= anime.coverImagePath %>">
+    </div>
+    <div class="anime-details-grid">
+        <div class="anime-details-label">Episodes:</div>
+        <div><%= anime.episodesCount %></div>
+        <div class="anime-details-label">Status:</div>
+        <div><%= anime.status %></div>
+        <% if (anime.source != null && anime.source !== '') { %>
+            <div class="anime-details-label">Source:</div>
+            <div><%= anime.source %></div>
+        <% } %>
+        <% if (anime.externalLink != null && anime.externalLink !== '') { %>
+            <div class="anime-details-label">Link:</div>
+            <div><a href="<%= anime.externalLink %>" target="_blank">Link</a></div>
+        <% } %>
+        <div class="anime-details-label">Publish Date:</div>
+        <div><%= anime.publishDate.toDateString() %></div>
+        <div class="anime-details-label">View Status:</div>
+        <div><%= anime.viewStatus %></div>
+    </div>
+</div>
+<div class="anime-description">
+    <div class="anime-description-label">Description:</div>
+    <div><%= anime.description %></div>
+</div>
 <div class="btn-row">
     <a class="btn btn-primary" href="/anime/<%= anime.id %>/edit">Edit</a>
     <%- include('../partials/deleteForm', { url: `/anime/${anime.id}` }) %>

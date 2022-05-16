@@ -5,6 +5,8 @@
 @import 'shared/page-header.css';
 @import 'shared/content-table.css';
 @import 'shared/form.css';
+@import 'shared/character.css';
+@import 'shared/animes.css';
 
 :root {
     font-family: 'Cormorant Garamond', serif;
@@ -27,4 +29,9 @@ body {
 
 .inner-container {
     margin: 0 2rem;
+}
+
+.error-message {
+    font-size: 1.3rem;
+    color: hsl(var(--color-danger-hue), 100%, 50%);
 }

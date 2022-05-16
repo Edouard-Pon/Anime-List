@@ -36,20 +36,17 @@ router.post('/', async (req, res) => {
         anime: req.body.anime,
         description: req.body.description
     })
-    if (req.body.image != null && req.body.image !== '') {
-        saveImage(character, req.body.image)
-    }
     try {
+        saveImage(character, req.body.image)
         const newCharacter = await character.save()
         res.redirect(`characters/${newCharacter.id}`)
-    } catch (err) {
+    } catch {
         const animes = await Anime.find({})
         res.render('characters/new', {
             character: character,
             animes: animes,
             errorMessage: 'Error creating Character'
         })
-        console.log(err)
     }
 })
 

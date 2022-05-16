@@ -20,6 +20,7 @@
     text-decoration: none;
     text-align: center;
     box-shadow: 0 0 0.6rem var(--color-btn-box-shadow);
+    margin-top: .8rem;
 }
 
 .btn-row {

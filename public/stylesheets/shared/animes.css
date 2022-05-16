@@ -1,0 +1,54 @@
+:root {
+    --anime-cover-width: 200px;
+    --anime-cover-width-large: 255px;
+    --anime-cover-aspect-ratio: 0.75;
+}
+
+.anime-cover {
+    width: var(--anime-cover-width);
+    height: calc(var(--anime-cover-width) / var(--anime-cover-aspect-ratio));
+}
+
+.anime-cover-large {
+    --anime-cover-width: var(--anime-cover-width-large);
+}
+
+.anime-grid {
+    display: grid;
+    justify-content: center;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fill, var(--anime-cover-width));
+}
+
+.anime-grid-large {
+    grid-template-columns: repeat(auto-fill, var(--anime-cover-width-large));
+}
+
+.anime-details {
+    display: flex;
+    grid-gap: 1.5rem;
+}
+
+.anime-details-label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    align-self: flex-start;
+}
+
+.anime-details-grid {
+    display: grid;
+    align-content: flex-start;
+    align-items: center;
+    grid-gap: .4rem 1.2rem;
+    grid-template-columns: auto auto;
+}
+
+.anime-description {
+    margin-top: .8rem;
+}
+
+.anime-description-label {
+    margin-bottom: .8rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+}

@@ -20,10 +20,5 @@
         <button class="btn btn-primary" type="submit">Search</button>
     </div>
 </form>
-<div>
-    <% animes.forEach(anime => { %>
-        <a href="/anime/<%= anime.id %>">
-            <img height="150" width="100" src="<%= anime.coverImagePath %>">
-        </a>
-    <% }) %>
-</div>
+<br>
+<%- include('../partials/animeGrid', { animes: animes, large: true }) %>
