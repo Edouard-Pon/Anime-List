@@ -1,9 +1,21 @@
 <h2 class="page-header"><%= character.name %> <%= character.surname %></h2>
-<div><img width="100" height="150" src="<%= character.imagePath %>"></div>
-<div>Name: <%= character.name %></div>
-<div>Surname: <%= character.surname %></div>
-<div>Age: <%= character.age %></div>
-<div>Description: <%= character.description %></div>
+<div class="character-details">
+    <div>
+        <img class="character-cover character-cover-large" src="<%= character.imagePath %>">
+    </div>
+    <div class="character-details-grid">
+        <div class="character-details-label">Name:</div>
+        <div><%= character.name %></div>
+        <div class="character-details-label">Surname:</div>
+        <div><%= character.surname %></div>
+        <div class="character-details-label">Age:</div>
+        <div><%= character.age %></div>
+    </div>
+</div>
+<div class="character-description">
+    <div class="character-description-label">Description:</div>
+    <div><%= character.description %></div>
+</div>
 <div class="btn-row">
     <a class="btn btn-primary" href="/characters/<%= character.id %>/edit">Edit</a>
     <%- include('../partials/deleteForm', { url: `/characters/${character.id}` }) %>

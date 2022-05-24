@@ -1,0 +1,11 @@
+<% characterCoverClass = locals.large ? 'character-cover-large' : '' %>
+<% characterGridClass = locals.large ? 'character-grid-large' : '' %>
+<div class="character-grid" <%= characterGridClass %>>
+    <% characters.forEach(character => { %>
+        <a href="/characters/<%= character.id %>">
+            <img class="character-cover" src="<%= character.imagePath %>">
+            <div><%= character.name %></div>
+            <div><%= character.surname %></div>
+        </a>
+    <% }) %>
+</div>
