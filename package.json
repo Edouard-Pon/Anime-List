@@ -28,7 +28,7 @@
     "filepond-plugin-image-preview": "^4.6.11",
     "filepond-plugin-image-resize": "^2.0.10",
     "method-override": "^3.0.0",
-    "mongoose": "^6.3.1",
+    "mongoose": "^6.4.6",
     "nodemon": "^2.0.19"
   },
   "devDependencies": {
