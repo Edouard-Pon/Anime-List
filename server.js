@@ -26,8 +26,7 @@ app.use(express.static('node_modules/filepond-plugin-image-resize/dist'))
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.DATABASE_URL, (error) => { if (error) console.log(error) })
-mongoose.connection.once('open', () => console.log('Connected to Mongoose'))
+mongoose.connect(process.env.DATABASE_URL).then(() => console.log('Connected to Mongoose'))
 
 app.use('/', indexRouter)
 app.use('/characters', characterRouter)
