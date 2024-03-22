@@ -7,23 +7,37 @@ const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
 // All Anime's Route
 router.get('/', async (req, res) => {
     let query = Anime.find()
-    if (req.query.title != null && req.query.title !== '') {
-        query = query.regex('title', new RegExp(req.query.title, 'i'))
+    try {
+        const animes = await query.sort({ createdAt: 'desc' }).exec()
+        res.json({
+            animes: animes,
+            searchOptions: req.body
+        })
+    } catch {
+        res.status(500).json({ message: 'An error occurred while retrieving the data.' })
     }
-    if (req.query.publishedBefore != null && req.query.publishedBefore !== '') {
-        query = query.lte('publishDate', req.query.publishedBefore)
+})
+
+//Search Anime's Route
+router.post('/search', async (req, res) => {
+    let query = Anime.find()
+    if (req.body.title != null && req.body.title !== '') {
+        query = query.regex('title', new RegExp(req.body.title, 'i'))
     }
-    if (req.query.publishedAfter != null && req.query.publishedAfter !== '') {
-        query = query.gte('publishDate', req.query.publishedAfter)
+    if (req.body.publishedBefore != null && req.body.publishedBefore !== '') {
+        query = query.lte('publishDate', req.body.publishedBefore)
+    }
+    if (req.body.publishedAfter != null && req.body.publishedAfter !== '') {
+        query = query.gte('publishDate', req.body.publishedAfter)
     }
     try {
         const animes = await query.sort({ createdAt: 'desc' }).exec()
-        res.render('animes/index', {
+        res.json({
             animes: animes,
-            searchOptions: req.query
+            searchOptions: req.body
         })
     } catch {
-        res.redirect('/')
+        res.status(500).json({ message: 'An error occurred while retrieving the data.' })
     }
 })
 
@@ -33,7 +47,7 @@ router.get('/new', async (req, res) => {
 })
 
 // Create Anime Route
-router.post('/', async (req, res) => {
+router.post('/create', async (req, res) => {
     const anime = new Anime({
         title: req.body.title,
         episodesCount: req.body.episodesCount,
@@ -74,11 +88,11 @@ router.get('/:id/edit', async (req, res) => {
     }
 })
 
-// Update Anime Route
+// Update Anime Route TODO - Test and fix
 router.put('/:id', async (req, res) => {
     let anime
-
     try {
+        console.log(req.body)
         anime = await Anime.findById(req.params.id)
         anime.title = req.body.title
         anime.episodesCount = req.body.episodesCount
@@ -92,12 +106,12 @@ router.put('/:id', async (req, res) => {
             saveCover(anime, req.body.cover)
         }
         await anime.save()
-        res.redirect(`/anime/${anime.id}`)
-    } catch {
+        res.json({ message: 'Anime updated successfully', anime: anime })
+    } catch (e) {
         if (anime != null) {
-            renderEditPage(res, anime, true)
+            res.status(400).json({ message: 'Error updating Anime' })
         } else {
-            res.redirect('/')
+            res.status(404).json({ message: 'Anime not found' })
         }
     }
 })
@@ -108,15 +122,12 @@ router.delete('/:id', async (req, res) => {
     try {
         anime = await Anime.findById(req.params.id)
         await anime.remove()
-        res.redirect('/anime')
+        res.json({ message: 'Anime successfully deleted' })
     } catch {
         if (anime != null) {
-            res.render('animes/show', {
-                anime: anime,
-                errorMessage: 'Could not remove Anime'
-            })
+            res.status(400).json({ message: 'Could not remove Anime', anime: anime })
         } else {
-            res.redirect('/')
+            res.status(404).json({ message: 'Anime not found' })
         }
     }
 })

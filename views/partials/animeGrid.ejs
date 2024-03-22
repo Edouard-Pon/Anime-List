@@ -1,9 +1,0 @@
-<% animeCoverClass = locals.large ? 'anime-cover-large' : '' %>
-<% animeGridClass = locals.large ? 'anime-grid-large' : '' %>
-<div class="anime-grid <%= animeGridClass %>">
-    <% animes.forEach(anime => { %>
-        <a href="/anime/<%= anime.id %>">
-            <img class="anime-cover <%= animeCoverClass %>" src="<%= anime.coverImagePath %>">
-        </a>
-    <% }) %>
-</div>
