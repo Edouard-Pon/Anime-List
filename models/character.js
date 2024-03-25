@@ -1,30 +1,33 @@
 const mongoose = require('mongoose')
+const Anime = require('./anime')
 
 const characterSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
     },
-    surname: {
-        type: String
+    originalName: {
+        type: String,
     },
-    age: {
+    description: {
         type: String
     },
     image: {
         type: Buffer,
         required: true
     },
-    description: {
-        type: String
-    },
     imageType: {
         type: String,
         required: true
     },
     anime: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Anime'
+    },
+    uploadDate: {
+        type: Date,
+        required: true,
+        default: Date.now
     }
 })
 

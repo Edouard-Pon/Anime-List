@@ -6,24 +6,29 @@ const animeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    episodesCount: {
+    type: {
+        type: String,
+        required: true,
+    },
+    episodes: {
         type: Number,
         required: true
     },
     status: {
         type: String,
-        required: true
+        required: true,
+        enum: ['Ongoing', 'Announced', 'Out']
     },
     description: {
         type: String,
     },
-    publishDate: {
+    releaseDate: {
         type: Date,
-        required: true
     },
-    createdAt: {
+    uploadDate: {
         type: Date,
         required: true,
+        default: Date.now
     },
     source: {
         type: String
@@ -39,8 +44,22 @@ const animeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    viewStatus: {
+    genres: {
+        type: [String],
+        required: true
+    },
+    themes: {
+        type: [String],
+    },
+    duration: {
         type: String,
+    },
+    rating: {
+        type: Number,
+    },
+    character: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Character'
     }
 })
 
