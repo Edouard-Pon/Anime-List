@@ -2,26 +2,28 @@ const express = require('express')
 const router = express.Router()
 const Anime = require('../models/anime')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
+const authenticateToken = require('../middleware/auth')
+const { body, validationResult } = require('express-validator')
 
 
-// Get all anime's /anime TODO - Add pagination
+// Get all anime's /anime - no auth required TODO - Add pagination
 router.get('/', async (req, res) => {
     let query = Anime.find()
     try {
-        let animes = await query.sort({ createdAt: 'desc' }).exec()
-        animes = animes.map(anime => {
+        let anime = await query.sort({ createdAt: 'desc' }).exec()
+        anime = anime.map(anime => {
             const { coverImage, coverImageType, ...animeWithoutCoverImage } = anime._doc
             return { ...animeWithoutCoverImage, coverImagePath: anime.coverImagePath }
         })
         res.json({
-            animes: animes,
+            anime: anime,
         })
     } catch {
         res.status(500).json({ message: 'An error occurred while retrieving the data.' })
     }
 })
 
-// Get Anime by ID /anime/:id
+// Get Anime by ID /anime/:id - no auth required
 router.get('/:id', async (req, res) => {
     try {
         let anime = await Anime.findById(req.params.id).exec()
@@ -33,34 +35,44 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-// Search Anime's /anime/search
-router.post('/search', async (req, res) => {
-    let query = Anime.find()
-    if (req.body.title != null && req.body.title !== '') {
-        query = query.regex('title', new RegExp(req.body.title, 'i'))
-    }
-    if (req.body.publishedBefore != null && req.body.publishedBefore !== '') {
-        query = query.lte('publishDate', req.body.publishedBefore)
-    }
-    if (req.body.publishedAfter != null && req.body.publishedAfter !== '') {
-        query = query.gte('publishDate', req.body.publishedAfter)
-    }
-    try {
-        let animes = await query.sort({ createdAt: 'desc' }).exec()
-        animes = animes.map(anime => {
-            const { coverImage, coverImageType, ...animeWithoutCoverImage } = anime._doc
-            return { ...animeWithoutCoverImage, coverImagePath: anime.coverImagePath }
-        })
-        res.json({
-            animes: animes,
-            searchOptions: req.body
-        })
-    } catch {
-        res.status(500).json({ message: 'An error occurred while retrieving the data.' })
-    }
-})
+// Search Anime's /anime/search - no auth required
+router.post('/search',
+    body('title').trim().escape(),
+    body('publishedBefore').toDate(),
+    body('publishedAfter').toDate(),
+    async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
 
-// Create Anime Route TODO - Create anime in database
+        let query = Anime.find()
+        if (req.body.title != null && req.body.title !== '') {
+            query = query.regex('title', new RegExp(req.body.title, 'i'))
+        }
+        if (req.body.releasedBefore != null && req.body.releasedBefore !== '') {
+            query = query.lte('releaseDate', req.body.releasedBefore)
+        }
+        if (req.body.releasedAfter != null && req.body.releasedAfter !== '') {
+            query = query.gte('releaseDate', req.body.releasedAfter)
+        }
+        try {
+            let anime = await query.sort({ createdAt: 'desc' }).exec()
+            anime = anime.map(anime => {
+                const { coverImage, coverImageType, ...animeWithoutCoverImage } = anime._doc
+                return { ...animeWithoutCoverImage, coverImagePath: anime.coverImagePath }
+            })
+            res.json({
+                anime: anime,
+                searchOptions: req.body
+            })
+        } catch {
+            res.status(500).json({ message: 'An error occurred while retrieving the data.' })
+        }
+    }
+)
+
+// Create Anime Route - admin auth required TODO - Create anime in database
 // router.post('/create', async (req, res) => {
 //     const anime = new Anime({
 //         title: req.body.title,
@@ -82,7 +94,7 @@ router.post('/search', async (req, res) => {
 //     }
 // })
 
-// Update Anime Route TODO - Test and fix - Update anime in database
+// Update Anime Route - admin auth required TODO - Test and fix - Update anime in database
 // router.put('/:id', async (req, res) => {
 //     let anime
 //     try {
@@ -110,7 +122,7 @@ router.post('/search', async (req, res) => {
 //     }
 // })
 
-// Delete Anime Page TODO - Delete anime from database
+// Delete Anime Page - admin auth required TODO - Delete anime from database
 // router.delete('/:id', async (req, res) => {
 //     let anime
 //     try {

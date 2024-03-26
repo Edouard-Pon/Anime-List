@@ -3,18 +3,19 @@ const router = express.Router()
 const Character = require('../models/character')
 const Anime = require('../models/anime')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
+const { body, validationResult } = require('express-validator')
 
 
 // Get all characters /characters TODO - Add pagination
 router.get('/', async (req, res) => {
     try {
-        let characters =  await Character.find()
-        characters = characters.map(character => {
+        let character =  await Character.find()
+        character = character.map(character => {
             const { image, imageType, ...characterWithoutImage } = character._doc
             return { ...characterWithoutImage, imagePath: character.imagePath }
         })
         res.json({
-            characters: characters,
+            character: character,
         })
     } catch {
         res.status(500).json({ message: 'An error occurred while retrieving the data.' })
@@ -25,16 +26,16 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         let character = await Character.findById(req.params.id)
-        let animes = await  Anime.find({ _id: character.anime }).exec()
+        let anime = await  Anime.find({ _id: character.anime }).exec()
         const { image, imageType, ...characterWithoutImage } = character._doc
         character = { ...characterWithoutImage, imagePath: character.imagePath }
-        animes = animes.map(anime => {
+        anime = anime.map(anime => {
             const { coverImage, coverImageType, ...animeWithoutCoverImage } = anime._doc
             return { ...animeWithoutCoverImage, coverImagePath: anime.coverImagePath }
         })
         res.json({
             character: character,
-            animes: animes
+            anime: anime
         })
     } catch {
         res.status(500).json({ message: 'An error occurred while retrieving the data.' })
@@ -42,25 +43,33 @@ router.get('/:id', async (req, res) => {
 })
 
 // Search Characters /characters/search
-router.post('/search', async (req, res) => {
-    let searchOptions = {}
-    if (req.body.name != null && req.body.name !== '') {
-        searchOptions.name = new RegExp(req.body.name, 'i')
+router.post('/search',
+    body('name').trim().escape(),
+    async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+
+        let searchOptions = {}
+        if (req.body.name != null && req.body.name !== '') {
+            searchOptions.name = new RegExp(req.body.name, 'i')
+        }
+        try {
+            let character =  await Character.find(searchOptions)
+            character = character.map(character => {
+                const { image, imageType, ...characterWithoutImage } = character._doc
+                return { ...characterWithoutImage, imagePath: character.imagePath }
+            })
+            res.json({
+                character: character,
+                searchOptions: req.body
+            })
+        } catch {
+            res.status(500).json({ message: 'An error occurred while retrieving the data.' })
+        }
     }
-    try {
-        let characters =  await Character.find(searchOptions)
-        characters = characters.map(character => {
-            const { image, imageType, ...characterWithoutImage } = character._doc
-            return { ...characterWithoutImage, imagePath: character.imagePath }
-        })
-        res.json({
-            characters: characters,
-            searchOptions: req.body
-        })
-    } catch {
-        res.status(500).json({ message: 'An error occurred while retrieving the data.' })
-    }
-})
+)
 
 // Create Character Route TODO - Create character in database
 // router.post('/', async (req, res) => {
