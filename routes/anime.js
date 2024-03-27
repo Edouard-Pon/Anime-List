@@ -168,21 +168,19 @@ router.put('/:id',
     }
 )
 
-// Delete Anime Page - admin auth required TODO - Delete anime from database
-// router.delete('/:id', async (req, res) => {
-//     let anime
-//     try {
-//         anime = await Anime.findById(req.params.id)
-//         await anime.remove()
-//         res.json({ message: 'Anime successfully deleted' })
-//     } catch {
-//         if (anime != null) {
-//             res.status(400).json({ message: 'Could not remove Anime', anime: anime })
-//         } else {
-//             res.status(404).json({ message: 'Anime not found' })
-//         }
-//     }
-// })
+// Delete Anime Page - admin auth required
+router.delete('/:id', authenticateAdmin, async (req, res) => {
+    try {
+        const anime = await Anime.findById(req.params.id)
+        if (anime == null) {
+            return res.status(404).json({ message: 'Anime not found' })
+        }
+        await Anime.deleteOne({ _id: req.params.id })
+        res.json({ message: 'Anime successfully deleted' })
+    } catch (err) {
+        res.status(500).json({ message: 'Error deleting anime', error: err.message })
+    }
+})
 
 function saveCover(anime, coverEncoded) {
     if (coverEncoded == null) return
