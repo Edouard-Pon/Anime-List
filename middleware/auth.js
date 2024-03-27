@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const User = require('../models/user')
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
@@ -13,4 +14,17 @@ function authenticateToken(req, res, next) {
     })
 }
 
-module.exports = authenticateToken
+async function authenticateAdmin(req, res, next) {
+    await authenticateToken(req, res, () => {
+        if (req.user.role === 'admin') {
+            next()
+        } else {
+            res.sendStatus(403)
+        }
+    })
+}
+
+module.exports = {
+    authenticateToken,
+    authenticateAdmin
+}

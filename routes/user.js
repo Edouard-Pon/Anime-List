@@ -30,7 +30,7 @@ router.post('/login',
                 return res.status(401).json({ message: 'Authentication failed.' })
             }
 
-            const token = jwt.sign(user.toJSON(), secretKey, {
+            const token = jwt.sign({ role: user.role, username: user.username }, secretKey, {
                 expiresIn: 10080
             })
             res.status(200).json({ success: true, token: 'JWT ' + token })
