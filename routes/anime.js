@@ -75,34 +75,40 @@ router.post('/search',
 // Create Anime Route - admin auth required
 router.post('/create',
     authenticateAdmin,
-    body('title').trim().escape(),
-    body('type').trim().escape(),
-    body('episodes').toInt(),
-    body('status').trim().escape(),
-    body('description').trim().escape(),
-    body('releaseDate').toDate(),
-    body('source').trim().escape(),
-    body('externalLink').trim().escape(),
-    body('genres').toArray(),
-    body('themes').toArray(),
-    body('duration').trim().escape(),
-    body('rating').toInt(),
+    [
+        body('title').optional().trim().escape(),
+        body('type').optional().trim().escape(),
+        body('episodes').optional().toInt(),
+        body('status').optional().trim().escape(),
+        body('description').optional().trim().escape(),
+        body('releaseDate').optional().toDate(),
+        body('source').optional().trim().escape(),
+        body('externalLink').optional().trim().escape(),
+        body('genres').optional().toArray(),
+        body('themes').optional().toArray(),
+        body('duration').optional().trim().escape(),
+        body('rating').optional().isNumeric().toInt(),
+        body('character').optional().toArray(),
+    ],
     async (req, res) => {
-        const anime = new Anime({
-            title: req.body.title,
-            type: req.body.type,
-            episodes: req.body.episodes,
-            status: req.body.status,
-            description: req.body.description,
-            releaseDate: req.body.releaseDate,
-            source: req.body.source,
-            externalLink: req.body.externalLink,
-            genres: req.body.genres,
-            themes: req.body.themes,
-            duration: req.body.duration
-        })
+        const anime = new Anime()
+        if (req.body.title) anime.title = req.body.title
+        if (req.body.type) anime.type = req.body.type
+        if (req.body.episodes) anime.episodes = req.body.episodes
+        if (req.body.status) anime.status = req.body.status
+        if (req.body.description) anime.description = req.body.description
+        if (req.body.releaseDate) anime.releaseDate = req.body.releaseDate
+        if (req.body.source) anime.source = req.body.source
+        if (req.body.externalLink) anime.externalLink = req.body.externalLink
+        if (req.body.genres) anime.genres = req.body.genres
+        if (req.body.themes) anime.themes = req.body.themes
+        if (req.body.duration) anime.duration = req.body.duration
+        if (req.body.rating) anime.rating = req.body.rating
+        if (req.body.character) anime.character = req.body.character
         try {
-            saveCover(anime, req.file)
+            if (req.file != null && req.file !== '') {
+                saveCover(anime, req.file)
+            }
             const newAnime = await anime.save()
             res.json({ message: 'Anime created successfully', anime: newAnime })
         } catch (err) {
@@ -111,33 +117,56 @@ router.post('/create',
     }
 )
 
-// Update Anime Route - admin auth required TODO - Test and fix - Update anime in database
-// router.put('/:id', async (req, res) => {
-//     let anime
-//     try {
-//         console.log(req.body)
-//         anime = await Anime.findById(req.params.id)
-//         anime.title = req.body.title
-//         anime.episodesCount = req.body.episodesCount
-//         anime.status = req.body.status
-//         anime.publishDate = new Date(req.body.publishDate)
-//         anime.createdAt = new Date(req.body.createdAt)
-//         anime.externalLink = req.body.externalLink
-//         anime.description = req.body.description
-//         anime.viewStatus = req.body.viewStatus
-//         if (req.body.cover != null && req.body.cover !== '') {
-//             saveCover(anime, req.body.cover)
-//         }
-//         await anime.save()
-//         res.json({ message: 'Anime updated successfully', anime: anime })
-//     } catch (e) {
-//         if (anime != null) {
-//             res.status(400).json({ message: 'Error updating Anime' })
-//         } else {
-//             res.status(404).json({ message: 'Anime not found' })
-//         }
-//     }
-// })
+// Update Anime Route - admin auth required
+router.put('/:id',
+    authenticateAdmin,
+    [
+        body('title').optional().trim().escape(),
+        body('type').optional().trim().escape(),
+        body('episodes').optional().toInt(),
+        body('status').optional().trim().escape(),
+        body('description').optional().trim().escape(),
+        body('releaseDate').optional().toDate(),
+        body('source').optional().trim().escape(),
+        body('externalLink').optional().trim().escape(),
+        body('genres').optional().toArray(),
+        body('themes').optional().toArray(),
+        body('duration').optional().trim().escape(),
+        body('rating').optional().isNumeric().toInt(),
+        body('character').optional().toArray(),
+    ],
+    async (req, res) => {
+        let anime
+        try {
+            anime = await Anime.findById(req.params.id)
+            if (req.body.title) anime.title = req.body.title
+            if (req.body.type) anime.type = req.body.type
+            if (req.body.episodes) anime.episodes = req.body.episodes
+            if (req.body.status) anime.status = req.body.status
+            if (req.body.description) anime.description = req.body.description
+            if (req.body.releaseDate) anime.releaseDate = req.body.releaseDate
+            if (req.body.source) anime.source = req.body.source
+            if (req.body.externalLink) anime.externalLink = req.body.externalLink
+            if (req.body.genres) anime.genres = req.body.genres
+            if (req.body.themes) anime.themes = req.body.themes
+            if (req.body.duration) anime.duration = req.body.duration
+            if (req.body.rating) anime.rating = req.body.rating
+            if (req.body.character) anime.character = req.body.character
+            if (req.file != null && req.file !== '') {
+                saveCover(anime, req.file)
+            }
+            await anime.save()
+            res.json({ message: 'Anime updated successfully', anime: anime })
+        } catch (e) {
+            if (anime != null) {
+                console.log(e.message)
+                res.status(400).json({ message: 'Error updating Anime' })
+            } else {
+                res.status(404).json({ message: 'Anime not found' })
+            }
+        }
+    }
+)
 
 // Delete Anime Page - admin auth required TODO - Delete anime from database
 // router.delete('/:id', async (req, res) => {
