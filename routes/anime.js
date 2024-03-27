@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const Anime = require('../models/anime')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
-const authenticateToken = require('../middleware/auth')
+const { authenticateToken, authenticateAdmin } = require('../middleware/auth')
 const { body, validationResult } = require('express-validator')
 
 
@@ -72,27 +72,44 @@ router.post('/search',
     }
 )
 
-// Create Anime Route - admin auth required TODO - Create anime in database
-// router.post('/create', async (req, res) => {
-//     const anime = new Anime({
-//         title: req.body.title,
-//         episodesCount: req.body.episodesCount,
-//         status: req.body.status,
-//         publishDate: new Date(req.body.publishDate),
-//         createdAt: new Date(req.body.createdAt),
-//         source: req.body.source,
-//         externalLink: req.body.externalLink,
-//         description: req.body.description,
-//         viewStatus: req.body.viewStatus
-//     })
-//     try {
-//         saveCover(anime, req.body.cover)
-//         const newAnime = await anime.save()
-//         res.redirect(`anime/${newAnime.id}`)
-//     } catch {
-//         renderNewPage(res, anime, true)
-//     }
-// })
+// Create Anime Route - admin auth required
+router.post('/create',
+    authenticateAdmin,
+    body('title').trim().escape(),
+    body('type').trim().escape(),
+    body('episodes').toInt(),
+    body('status').trim().escape(),
+    body('description').trim().escape(),
+    body('releaseDate').toDate(),
+    body('source').trim().escape(),
+    body('externalLink').trim().escape(),
+    body('genres').toArray(),
+    body('themes').toArray(),
+    body('duration').trim().escape(),
+    body('rating').toInt(),
+    async (req, res) => {
+        const anime = new Anime({
+            title: req.body.title,
+            type: req.body.type,
+            episodes: req.body.episodes,
+            status: req.body.status,
+            description: req.body.description,
+            releaseDate: req.body.releaseDate,
+            source: req.body.source,
+            externalLink: req.body.externalLink,
+            genres: req.body.genres,
+            themes: req.body.themes,
+            duration: req.body.duration
+        })
+        try {
+            saveCover(anime, req.file)
+            const newAnime = await anime.save()
+            res.json({ message: 'Anime created successfully', anime: newAnime })
+        } catch (err) {
+            res.status(500).json({ message: 'Error creating new anime', error: err.message })
+        }
+    }
+)
 
 // Update Anime Route - admin auth required TODO - Test and fix - Update anime in database
 // router.put('/:id', async (req, res) => {
@@ -140,10 +157,9 @@ router.post('/search',
 
 function saveCover(anime, coverEncoded) {
     if (coverEncoded == null) return
-    const cover = JSON.parse(coverEncoded)
-    if (cover != null && imageMimeTypes.includes(cover.type)) {
-        anime.coverImage = new Buffer.from(cover.data, 'base64')
-        anime.coverImageType = cover.type
+    if (imageMimeTypes.includes(coverEncoded.mimetype)) {
+        anime.coverImage = coverEncoded.buffer
+        anime.coverImageType = coverEncoded.mimetype
     }
 }
 
