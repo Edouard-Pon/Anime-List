@@ -4,6 +4,7 @@ const Character = require('../models/character')
 const Anime = require('../models/anime')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
 const { body, validationResult } = require('express-validator')
+const { authenticateAdmin } = require('../middleware/auth')
 
 
 // Get all characters /characters TODO - Add pagination
@@ -72,27 +73,29 @@ router.post('/search',
 )
 
 // Create Character Route TODO - Create character in database
-// router.post('/', async (req, res) => {
-//     const character = new Character({
-//         name: req.body.name,
-//         surname: req.body.surname,
-//         age: req.body.age,
-//         anime: req.body.anime,
-//         description: req.body.description
-//     })
-//     try {
-//         saveImage(character, req.body.image)
-//         const newCharacter = await character.save()
-//         res.redirect(`characters/${newCharacter.id}`)
-//     } catch {
-//         const animes = await Anime.find({})
-//         res.render('characters/new', {
-//             character: character,
-//             animes: animes,
-//             errorMessage: 'Error creating Character'
-//         })
-//     }
-// })
+router.post('/create',
+    authenticateAdmin,
+    [
+        body('name').optional().trim().escape(),
+        body('originalName').optional().trim().escape(),
+        body('description').optional().trim().escape(),
+        body('anime').optional().toArray(),
+    ],
+    async (req, res) => {
+        const character = new Character()
+        if (req.body.name) character.name = req.body.name
+        if (req.body.originalName) character.originalName = req.body.originalName
+        if (req.body.description) character.description = req.body.description
+        if (req.body.anime) character.anime = req.body.anime
+        try {
+            saveImage(character, req.file)
+            const newCharacter = await character.save()
+            res.json({ message: 'Character created successfully', character: newCharacter })
+        } catch (err) {
+            res.status(500).json({ message: 'Error creating Character', error: err.message })
+        }
+    }
+)
 
 // Update Character Route TODO - Update character in database
 // router.put('/:id', async (req, res) => {
@@ -141,10 +144,9 @@ router.post('/search',
 
 function saveImage(character, imageEncoded) {
     if (imageEncoded == null) return
-    const image = JSON.parse(imageEncoded)
-    if (image != null && imageMimeTypes.includes(image.type)) {
-        character.image = new Buffer.from(image.data, 'base64')
-        character.imageType = image.type
+    if (imageMimeTypes.includes(imageEncoded.mimetype)) {
+        character.image = imageEncoded.buffers
+        character.imageType = imageEncoded.mimetype
     }
 }
 

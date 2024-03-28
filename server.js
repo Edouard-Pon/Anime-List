@@ -33,7 +33,7 @@ app.use(cors())
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASE_URL).then(() => console.log('Connected to Mongoose'))
 
-app.use('/characters', characterRouter)
+app.use('/characters', upload.single('image'), characterRouter)
 app.use('/anime', upload.single('cover'), animeRouter)
 app.use('/user', userRouter)
 
