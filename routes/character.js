@@ -97,7 +97,7 @@ router.post('/create',
     }
 )
 
-// Update Character Route TODO - Update character in database
+// Update Character Route - admin only
 router.put('/:id',
     authenticateAdmin,
     [
@@ -133,21 +133,19 @@ router.put('/:id',
     }
 )
 
-// Delete Character Route TODO - Delete character in database
-// router.delete('/:id', async (req, res) => {
-//     let character
-//     try {
-//         character = await Character.findById(req.params.id)
-//         await character.remove()
-//         res.redirect('/characters')
-//     } catch {
-//         if (character == null) {
-//             res.redirect('/')
-//         } else {
-//             res.redirect(`/characters/${character.id}`)
-//         }
-//     }
-// })
+// Delete Character Route - admin only
+router.delete('/:id', async (req, res) => {
+    try {
+        const character = await Character.findById(req.params.id)
+        if (character == null) {
+            return res.status(404).json({ message: 'Character not found' })
+        }
+        await Character.deleteOne({ _id: req.params.id })
+        res.json({ message: 'Character deleted successfully' })
+    } catch (err) {
+        res.status(500).json({ message: 'Error deleting Character', error: err.message })
+    }
+})
 
 function saveImage(character, imageEncoded) {
     if (imageEncoded == null) return
