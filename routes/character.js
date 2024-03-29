@@ -134,7 +134,7 @@ router.put('/:id',
 )
 
 // Delete Character Route - admin only
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateAdmin, async (req, res) => {
     try {
         const character = await Character.findById(req.params.id)
         if (character == null) {
