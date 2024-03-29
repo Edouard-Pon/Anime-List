@@ -91,6 +91,10 @@ router.post('/create',
         body('character').optional().toArray(),
     ],
     async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
         const anime = new Anime()
         if (req.body.title) anime.title = req.body.title
         if (req.body.type) anime.type = req.body.type
@@ -136,6 +140,10 @@ router.put('/:id',
         body('character').optional().toArray(),
     ],
     async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
         let anime
         try {
             anime = await Anime.findById(req.params.id)
