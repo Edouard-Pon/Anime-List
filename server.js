@@ -7,6 +7,7 @@ const app = express()
 const methodOverride = require('method-override')
 const cors = require('cors')
 const multer = require('multer')
+const checkApiKey = require('./middleware/check-api-key')
 
 const upload = multer({
     limits: {
@@ -33,8 +34,8 @@ app.use(cors())
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASE_URL).then(() => console.log('Connected to Mongoose'))
 
-app.use('/character', upload.single('image'), characterRouter)
-app.use('/anime', upload.single('cover'), animeRouter)
-app.use('/user', userRouter)
+app.use('/character', checkApiKey, upload.single('image'), characterRouter)
+app.use('/anime', checkApiKey, upload.single('cover'), animeRouter)
+app.use('/user', checkApiKey, userRouter)
 
 app.listen(process.env.PORT || 3000)
