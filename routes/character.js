@@ -72,7 +72,7 @@ router.post('/search',
     }
 )
 
-// Create Character Route TODO - Create character in database
+// Create Character Route - admin only
 router.post('/create',
     authenticateAdmin,
     [
@@ -98,33 +98,40 @@ router.post('/create',
 )
 
 // Update Character Route TODO - Update character in database
-// router.put('/:id', async (req, res) => {
-//     let character
-//     const animes = await Anime.find({})
-//     try {
-//         character = await Character.findById(req.params.id)
-//         character.name = req.body.name
-//         character.surname = req.body.surname
-//         character.age = req.body.age
-//         character.description = req.body.description
-//         character.anime = req.body.anime
-//         if (req.body.image != null && req.body.image !== '') {
-//             saveImage(character, req.body.image)
-//         }
-//         await character.save()
-//         res.redirect(`/characters/${character.id}`)
-//     } catch {
-//         if (character == null) {
-//             res.redirect('/')
-//         } else {
-//             res.render('characters/edit', {
-//                 character: character,
-//                 animes: animes,
-//                 errorMessage: 'Error updating Character'
-//             })
-//         }
-//     }
-// })
+router.put('/:id',
+    authenticateAdmin,
+    [
+        body('name').trim().escape(),
+        body('originalName').trim().escape(),
+        body('description').trim().escape(),
+        body('anime').optional().toArray(),
+    ],
+    async (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() })
+        }
+        let character
+        try {
+            character = await Character.findById(req.params.id)
+            if (character.name) character.name = req.body.name
+            if (character.originalName) character.originalName = req.body.originalName
+            if (character.description) character.description = req.body.description
+            if (character.anime) character.anime = req.body.anime
+            if (req.file != null && req.file !== '') {
+                saveImage(character, req.file)
+            }
+            await character.save()
+            res.json({ message: 'Character updated successfully', character: character })
+        } catch {
+            if (character == null) {
+                res.status(404).json({ message: 'Character not found' })
+            } else {
+                res.status(500).json({ message: 'Error updating Character' })
+            }
+        }
+    }
+)
 
 // Delete Character Route TODO - Delete character in database
 // router.delete('/:id', async (req, res) => {
@@ -145,7 +152,7 @@ router.post('/create',
 function saveImage(character, imageEncoded) {
     if (imageEncoded == null) return
     if (imageMimeTypes.includes(imageEncoded.mimetype)) {
-        character.image = imageEncoded.buffers
+        character.image = imageEncoded.buffer
         character.imageType = imageEncoded.mimetype
     }
 }
