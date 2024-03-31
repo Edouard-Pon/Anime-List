@@ -8,6 +8,12 @@ const methodOverride = require('method-override')
 const cors = require('cors')
 const multer = require('multer')
 const checkApiKey = require('./middleware/check-api-key')
+const rateLimit = require('express-rate-limit')
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+})
 
 const upload = multer({
     limits: {
@@ -26,6 +32,7 @@ const characterRouter = require('./routes/character')
 const animeRouter = require('./routes/anime')
 const userRouter = require('./routes/user')
 
+app.use(limiter)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(methodOverride('_method'))
