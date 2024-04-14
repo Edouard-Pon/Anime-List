@@ -31,6 +31,7 @@ const upload = multer({
 const characterRouter = require('./routes/character')
 const animeRouter = require('./routes/anime')
 const userRouter = require('./routes/user')
+const animeListRouter = require('./routes/anime-list')
 
 app.use(limiter)
 app.use(express.json())
@@ -44,5 +45,6 @@ mongoose.connect(process.env.DATABASE_URL).then(() => console.log('Connected to 
 app.use('/character', checkApiKey, upload.single('image'), characterRouter)
 app.use('/anime', checkApiKey, upload.single('cover'), animeRouter)
 app.use('/user', checkApiKey, userRouter)
+app.use('/api/anime-list', checkApiKey, animeListRouter)
 
 app.listen(process.env.PORT || 3000)
