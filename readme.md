@@ -14,6 +14,7 @@ npm install package.json
 ```dotenv
 DATABASE_URL=<url>
 SECRET_KEY=<key>
+API_KEY=<key>
 ```
 
 4. To run the project use:
