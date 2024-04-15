@@ -45,6 +45,6 @@ mongoose.connect(process.env.DATABASE_URL).then(() => console.log('Connected to 
 app.use('/character', checkApiKey, upload.single('image'), characterRouter)
 app.use('/anime', checkApiKey, upload.single('cover'), animeRouter)
 app.use('/user', checkApiKey, userRouter)
-app.use('/api/anime-list', checkApiKey, animeListRouter)
+app.use('/anime-list', checkApiKey, animeListRouter)
 
 app.listen(process.env.PORT || 3000)
